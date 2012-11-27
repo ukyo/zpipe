@@ -1,12 +1,12 @@
   return new Uint8Array(zpipe_output.subarray(0, ++zpipe_j));
 };
 
-function deflate(input, level) {
-  return run.call({}, input, false, typeof level === 'number' ? level : 6);
+function deflate(input, level, zlib_header) {
+  return run.call({}, input, false, typeof level === 'number' ? level : 6, zlib_header);
 }
 
-function inflate(input) {
-  return run.call({}, input, true);
+function inflate(input, zlib_header) {
+  return run.call({}, input, true, null, zlib_header);
 }
 
 function gc() {

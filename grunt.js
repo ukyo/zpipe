@@ -32,7 +32,7 @@ module.exports = function(grunt) {
       },
 
       'compile': {
-        command: EMSCRIPTEN + 'emcc -O2 src/zpipe_no_zlib_header.c zlib/libz.a -o dist/zpipe.raw.js --closure 0',
+        command: EMSCRIPTEN + 'emcc -O2 src/zpipe.c zlib/libz.a -o dist/zpipe.raw.js --closure 0',
         stdout: true
       },
 

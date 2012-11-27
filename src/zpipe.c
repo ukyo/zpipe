@@ -27,13 +27,16 @@
 
 #define CHUNK 16384
 
+#define USE_ZLIB_HEADER 1
+#define NO_ZLIB_HEADER -1
+
 /* Compress from file source to file dest until EOF on source.
    def() returns Z_OK on success, Z_MEM_ERROR if memory could not be
    allocated for processing, Z_STREAM_ERROR if an invalid compression
    level is supplied, Z_VERSION_ERROR if the version of zlib.h and the
    version of the library linked do not match, or Z_ERRNO if there is
    an error reading or writing the files. */
-int def(FILE *source, FILE *dest, int level)
+int def(FILE *source, FILE *dest, int level, int zlib_header)
 {
     int ret, flush;
     unsigned have;
@@ -46,7 +49,7 @@ int def(FILE *source, FILE *dest, int level)
     strm.zfree = Z_NULL;
     strm.opaque = Z_NULL;
     ret = deflateInit2(
-        &strm, level, Z_DEFLATED, -MAX_WBITS,
+        &strm, level, Z_DEFLATED, MAX_WBITS * zlib_header,
         MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY);
     if (ret != Z_OK)
         return ret;
@@ -91,7 +94,7 @@ int def(FILE *source, FILE *dest, int level)
    invalid or incomplete, Z_VERSION_ERROR if the version of zlib.h and
    the version of the library linked do not match, or Z_ERRNO if there
    is an error reading or writing the files. */
-int inf(FILE *source, FILE *dest)
+int inf(FILE *source, FILE *dest, int zlib_header)
 {
     int ret;
     unsigned have;
@@ -105,7 +108,7 @@ int inf(FILE *source, FILE *dest)
     strm.opaque = Z_NULL;
     strm.avail_in = 0;
     strm.next_in = Z_NULL;
-    ret = inflateInit2(&strm, -MAX_WBITS);
+    ret = inflateInit2(&strm, MAX_WBITS * zlib_header);
     if (ret != Z_OK)
         return ret;
 
@@ -179,25 +182,28 @@ int main(int argc, char **argv)
 {
     int ret;
     char level;
+    int zlib_header;
 
     /* avoid end-of-line conversions */
     SET_BINARY_MODE(stdin);
     SET_BINARY_MODE(stdout);
 
     /* do compression if no arguments */
-    if (argc == 3 && strcmp(argv[1], "-c") == 0) {
+    if (argc == 4 && strcmp(argv[1], "-c") == 0) {
+        zlib_header = (strcmp(argv[3], "-header=1") == 0) ? USE_ZLIB_HEADER : NO_ZLIB_HEADER;
         level = *argv[2] - 0x30;
         if (level < 0) level = 0;
         if (level > 9) level = 9;
-        ret = def(stdin, stdout, level);
+        ret = def(stdin, stdout, level, zlib_header);
         if (ret != Z_OK)
             zerr(ret);
         return ret;
     }
 
     /* do decompression if -d specified */
-    else if (argc == 2 && strcmp(argv[1], "-d") == 0) {
-        ret = inf(stdin, stdout);
+    else if (argc == 3 && strcmp(argv[1], "-d") == 0) {
+        zlib_header = (strcmp(argv[2], "-header=1") == 0) ? USE_ZLIB_HEADER : NO_ZLIB_HEADER;
+        ret = inf(stdin, stdout, zlib_header);
         if (ret != Z_OK)
             zerr(ret);
         return ret;
