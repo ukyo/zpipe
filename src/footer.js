@@ -1,16 +1,35 @@
-  return new Uint8Array(zpipe_output.subarray(0, ++zpipe_j));
-};
 
-function deflate(input, level, zlib_header) {
-  return run.call({}, input, false, typeof level === 'number' ? level : 6, zlib_header);
+function zpipeInit(input) {
+  zpipeInputIndex = -1;
+  zpipeOutputIndex = -1;
+  zpipeInput = input;
+  FS.streams[1].eof = false;
 }
 
-function inflate(input, zlib_header) {
-  return run.call({}, input, true, null, zlib_header);
+function zpipeGetOutput() {
+  return new Uint8Array(zpipeOutput.subarray(0, ++zpipeOutputIndex));
 }
 
-function gc() {
-  zpipe_buffer = new Uint8Array(1);
+function zpipeDeflate(input, level, zlibHeader) {
+  zpipeInit(input);
+
+  level = typeof level === 'number' ? level : 6;
+  level = Math.min(Math.max(level, 0), 9);
+  zlibHeader = zlibHeader ? 1 : -1;
+
+  _def_stdio(level, zlibHeader);
+  return zpipeGetOutput();
+}
+
+function zpipeInflate(input, zlibHeader) {
+  zpipeInit(input);
+  zlibHeader = zlibHeader ? 1 : -1;
+  _inf_stdio(zlibHeader);
+  return zpipeGetOutput();
+}
+
+function zpipeGC() {
+  zpipeInput = new Uint8Array(1);
 }
 
 
@@ -19,8 +38,8 @@ function gc() {
 var global = (function() {return this})();
 
 global['zpipe'] = global['zpipe'] || {};
-global['zpipe']['deflate'] = deflate;
-global['zpipe']['inflate'] = inflate;
-global['zpipe']['gc'] = gc;
+global['zpipe']['deflate'] = zpipeDeflate;
+global['zpipe']['inflate'] = zpipeInflate;
+global['zpipe']['gc'] = zpipeGC;
 
 })();

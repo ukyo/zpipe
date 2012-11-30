@@ -30,6 +30,19 @@
 #define USE_ZLIB_HEADER 1
 #define NO_ZLIB_HEADER -1
 
+// z_stream strm;
+
+
+// int defInit(unsigned char level, unsigned char zlib_header)
+// {
+//     strm.zalloc = Z_NULL;
+//     strm.zfree = Z_NULL;
+//     strm.opaque = Z_NULL;
+//     return deflateInit2(
+//         &strm, level, Z_DEFLATED, MAX_WBITS * zlib_header,
+//         MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY);
+// }
+
 /* Compress from file source to file dest until EOF on source.
    def() returns Z_OK on success, Z_MEM_ERROR if memory could not be
    allocated for processing, Z_STREAM_ERROR if an invalid compression
@@ -152,66 +165,14 @@ int inf(FILE *source, FILE *dest, int zlib_header)
     return ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
 }
 
-/* report a zlib or i/o error */
-void zerr(int ret)
-{
-    fputs("zpipe: ", stderr);
-    switch (ret) {
-    case Z_ERRNO:
-        if (ferror(stdin))
-            fputs("error reading stdin\n", stderr);
-        if (ferror(stdout))
-            fputs("error writing stdout\n", stderr);
-        break;
-    case Z_STREAM_ERROR:
-        fputs("invalid compression level\n", stderr);
-        break;
-    case Z_DATA_ERROR:
-        fputs("invalid or incomplete deflate data\n", stderr);
-        break;
-    case Z_MEM_ERROR:
-        fputs("out of memory\n", stderr);
-        break;
-    case Z_VERSION_ERROR:
-        fputs("zlib version mismatch!\n", stderr);
-    }
-}
-
-/* compress or decompress from stdin to stdout */
-int main(int argc, char **argv)
-{
-    int ret;
-    char level;
-    int zlib_header;
-
-    /* avoid end-of-line conversions */
+int def_stdio(int level, int zlib_header) {
     SET_BINARY_MODE(stdin);
     SET_BINARY_MODE(stdout);
+    return def(stdin, stdout, level, zlib_header);
+}
 
-    /* do compression if no arguments */
-    if (argc == 4 && strcmp(argv[1], "-c") == 0) {
-        zlib_header = (strcmp(argv[3], "-header=1") == 0) ? USE_ZLIB_HEADER : NO_ZLIB_HEADER;
-        level = *argv[2] - 0x30;
-        if (level < 0) level = 0;
-        if (level > 9) level = 9;
-        ret = def(stdin, stdout, level, zlib_header);
-        if (ret != Z_OK)
-            zerr(ret);
-        return ret;
-    }
-
-    /* do decompression if -d specified */
-    else if (argc == 3 && strcmp(argv[1], "-d") == 0) {
-        zlib_header = (strcmp(argv[2], "-header=1") == 0) ? USE_ZLIB_HEADER : NO_ZLIB_HEADER;
-        ret = inf(stdin, stdout, zlib_header);
-        if (ret != Z_OK)
-            zerr(ret);
-        return ret;
-    }
-
-    /* otherwise, report usage */
-    else {
-        fputs("zpipe usage: zpipe [-d] < source > dest\n", stderr);
-        return 1;
-    }
+int inf_stdio(int zlib_header) {
+    SET_BINARY_MODE(stdin);
+    SET_BINARY_MODE(stdout);
+    return inf(stdin, stdout, zlib_header);
 }

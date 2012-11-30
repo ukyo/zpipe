@@ -1,25 +1,27 @@
 (function() {
 
-var zpipe_buffer = new Uint8Array(1);
+var zpipeInput;
+var zpipeOutput = new Uint8Array(1);
+var zpipeTemp;
+var zpipeInputIndex;
+var zpipeOutputIndex;
 
-function run(zpipe_input, zpipe_isInflate, zpipe_level, zlib_header) {
-  var zpipe_i = -1;
-  var zpipe_j = -1;
-  var zpipe_output = zpipe_buffer;
-  var Module = {};
-  Module['arguments'] = zpipe_isInflate ? ['-d'] : ['-c', '' + zpipe_level];
-  Module['arguments'].push('-header=' + (zlib_header ? 1 : 0));
-  Module['stdin'] = function() {
-    return ++zpipe_i < zpipe_input.length ? zpipe_input[zpipe_i] : null;
-  };
-  Module['stdout'] = function(x) {
+var Module = {
+  'stdin': function() {
+    return ++zpipeInputIndex < zpipeInput.length ?
+      zpipeInput[zpipeInputIndex] :
+      null;
+  },
+
+  'stdout': function(x) {
     if (x !== null) {
-      if (++zpipe_j === zpipe_output.length) {
-        zpipe_buffer = new Uint8Array(zpipe_output.length * 2);
-        zpipe_buffer.set(zpipe_output);
-        zpipe_output = zpipe_buffer;
+      if (++zpipeOutputIndex === zpipeOutput.length) {
+        zpipeTemp = new Uint8Array(zpipeOutput.length * 2);
+        zpipeTemp.set(zpipeOutput);
+        zpipeOutput = zpipeTemp;
       }
-      zpipe_output[zpipe_j] = x;
+      zpipeOutput[zpipeOutputIndex] = x;
     }
-  };
+  }
+};
 
