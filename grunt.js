@@ -50,7 +50,7 @@ module.exports = function(grunt) {
     watch: {
       js: {
         files: JS_FILES,
-        task: 'concat'
+        tasks: ['concat']
       }
     }
   });
