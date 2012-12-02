@@ -13,6 +13,7 @@
 		"url" : "git://github.com/richardassar/zpipe"
 	},
 	"dependencies" : {
-		"grunt-exec": "*"
+		"grunt-exec": "*",
+		"grunt-contrib-nodeunit": "*"
 	}
 }

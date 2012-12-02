@@ -23,9 +23,9 @@ Regular `<script>` include ...
 <script type="text/javascript" src="zpipe.min.js"></script>
 
 <script>
-	var deflated = zpipe.deflate(byteArray);
+	var deflated = zpipe.deflate(byteArray, level, zlibHeader, copy);
 
-	var inflated = zpipe.inflate(deflated); // "the balloon"
+	var inflated = zpipe.inflate(deflated, zlibHeader, copy);
 </script>
 ```
 
@@ -63,10 +63,10 @@ Initialize zlib (already inialized).
 grunt exec:zlib-init
 ```
 
-Compile the [C file](https://github.com/ukyo/zpipe/src/zpipe_no_zlib_header.js).
+Compile the zpipe.c
 
 ```
-grunt exec:compile
+grunt compile
 ```
 
 Concat header.js, compiled file(zpipe.raw.js) and footer.js.
@@ -75,14 +75,28 @@ Concat header.js, compiled file(zpipe.raw.js) and footer.js.
 grunt concat
 ```
 
-Minify concated file with Closure Compiler.
+Minify concated file with UglifyJS and Closure Compiler.
 
 ```
-grunt exec:minify
+grunt minify
 ```
 
 Full build
 
 ```
-grunt --force
+grunt
+```
+
+## Develop
+
+Test
+
+```
+grunt test
+```
+
+Watch update files (zpipe.c, header.js, zpipe.funcs.js, footer.js).
+
+```
+grunt watch
 ```

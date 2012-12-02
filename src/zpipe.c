@@ -25,23 +25,7 @@
 #  define SET_BINARY_MODE(file)
 #endif
 
-#define CHUNK 16384
-
-#define USE_ZLIB_HEADER 1
-#define NO_ZLIB_HEADER -1
-
-// z_stream strm;
-
-
-// int defInit(unsigned char level, unsigned char zlib_header)
-// {
-//     strm.zalloc = Z_NULL;
-//     strm.zfree = Z_NULL;
-//     strm.opaque = Z_NULL;
-//     return deflateInit2(
-//         &strm, level, Z_DEFLATED, MAX_WBITS * zlib_header,
-//         MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY);
-// }
+#define CHUNK 0x8000
 
 /* Compress from file source to file dest until EOF on source.
    def() returns Z_OK on success, Z_MEM_ERROR if memory could not be

@@ -1,10 +1,5 @@
 (function(exports) {
 
-var zInput;
-var zOutput = new Uint8Array(1);
-var zInputOffset;
-var zOutputOffset;
-
 // Note: For maximum-speed code, see "Optimizing Code" on the Emscripten wiki, https://github.com/kripken/emscripten/wiki/Optimizing-Code
 // Note: Some Emscripten settings may limit the speed of the generated code.
 // TODO: " u s e   s t r i c t ";
@@ -3504,7 +3499,7 @@ function _def($source, $dest, $level, $zlib_header) {
   var $11$s2;
   var $strm$s2;
   var __stackBase__ = STACKTOP;
-  STACKTOP += 32824;
+  STACKTOP += 65592;
   var label;
   var $strm = __stackBase__, $strm$s2 = $strm >> 2;
   HEAP32[$strm$s2 + 8] = 0;
@@ -3522,10 +3517,10 @@ function _def($source, $dest, $level, $zlib_header) {
   var $9 = $strm + 4 | 0;
   var $10 = $strm | 0;
   var $11$s2 = ($strm + 16 | 0) >> 2;
-  var $12 = __stackBase__ + 16440 | 0;
+  var $12 = __stackBase__ + 32824 | 0;
   var $13 = $strm + 12 | 0;
   L68 : while (1) {
-    HEAP32[$9 >> 2] = _fread($8, 1, 16384, $source);
+    HEAP32[$9 >> 2] = _fread($8, 1, 32768, $source);
     if ((_ferror($source) | 0) != 0) {
       label = 49;
       break;
@@ -3534,13 +3529,13 @@ function _def($source, $dest, $level, $zlib_header) {
     var $23 = $22 ? 4 : 0;
     HEAP32[$10 >> 2] = $8;
     while (1) {
-      HEAP32[$11$s2] = 16384;
+      HEAP32[$11$s2] = 32768;
       HEAP32[$13 >> 2] = $12;
       var $25 = _deflate($5, $23);
       if (($25 | 0) == -2) {
-        ___assert_func(STRING_TABLE.__str1 | 0, 86, STRING_TABLE.___func___def | 0, STRING_TABLE.__str2 | 0);
+        ___assert_func(STRING_TABLE.__str1 | 0, 70, STRING_TABLE.___func___def | 0, STRING_TABLE.__str2 | 0);
       }
-      var $30 = 16384 - HEAP32[$11$s2] | 0;
+      var $30 = 32768 - HEAP32[$11$s2] | 0;
       if ((_fwrite($12, 1, $30, $dest) | 0) != ($30 | 0)) {
         label = 55;
         break L68;
@@ -3554,7 +3549,7 @@ function _def($source, $dest, $level, $zlib_header) {
       }
     }
     if ((HEAP32[$9 >> 2] | 0) != 0) {
-      ___assert_func(STRING_TABLE.__str1 | 0, 93, STRING_TABLE.___func___def | 0, STRING_TABLE.__str3 | 0);
+      ___assert_func(STRING_TABLE.__str1 | 0, 77, STRING_TABLE.___func___def | 0, STRING_TABLE.__str3 | 0);
     }
     if ($22) {
       label = 60;
@@ -3563,7 +3558,7 @@ function _def($source, $dest, $level, $zlib_header) {
   }
   if (label == 60) {
     if (($25 | 0) != 1) {
-      ___assert_func(STRING_TABLE.__str1 | 0, 97, STRING_TABLE.___func___def | 0, STRING_TABLE.__str4 | 0);
+      ___assert_func(STRING_TABLE.__str1 | 0, 81, STRING_TABLE.___func___def | 0, STRING_TABLE.__str4 | 0);
     }
     _deflateEnd($5);
     var $_0 = 0;
@@ -3589,7 +3584,7 @@ function _inf($source, $dest, $zlib_header) {
   var $11$s2;
   var $strm$s2;
   var __stackBase__ = STACKTOP;
-  STACKTOP += 32824;
+  STACKTOP += 65592;
   var label;
   var $strm = __stackBase__, $strm$s2 = $strm >> 2;
   HEAP32[$strm$s2 + 8] = 0;
@@ -3609,12 +3604,12 @@ function _inf($source, $dest, $zlib_header) {
   }
   var $10 = __stackBase__ + 56 | 0;
   var $11$s2 = ($strm + 16 | 0) >> 2;
-  var $12 = __stackBase__ + 16440 | 0;
+  var $12 = __stackBase__ + 32824 | 0;
   var $13 = $strm + 12 | 0;
   var $ret_0 = 0;
   L96 : while (1) {
     var $ret_0;
-    var $15 = _fread($10, 1, 16384, $source);
+    var $15 = _fread($10, 1, 32768, $source);
     HEAP32[$4 >> 2] = $15;
     if ((_ferror($source) | 0) != 0) {
       label = 71;
@@ -3627,11 +3622,11 @@ function _inf($source, $dest, $zlib_header) {
     }
     HEAP32[$5 >> 2] = $10;
     while (1) {
-      HEAP32[$11$s2] = 16384;
+      HEAP32[$11$s2] = 32768;
       HEAP32[$13 >> 2] = $12;
       var $24 = _inflate($7, 0);
       if (($24 | 0) == -2) {
-        ___assert_func(STRING_TABLE.__str1 | 0, 144, STRING_TABLE.___func___inf | 0, STRING_TABLE.__str2 | 0);
+        ___assert_func(STRING_TABLE.__str1 | 0, 128, STRING_TABLE.___func___inf | 0, STRING_TABLE.__str2 | 0);
       } else if (($24 | 0) == 2) {
         label = 76;
         break L96;
@@ -3639,7 +3634,7 @@ function _inf($source, $dest, $zlib_header) {
         var $ret_1 = $24;
         break L96;
       }
-      var $29 = 16384 - HEAP32[$11$s2] | 0;
+      var $29 = 32768 - HEAP32[$11$s2] | 0;
       if ((_fwrite($12, 1, $29, $dest) | 0) != ($29 | 0)) {
         label = 80;
         break L96;
@@ -20015,6 +20010,12 @@ function _write(fildes, buf, nbyte) {
 }
 
 
+var zInput;
+var zOutput = new Uint8Array(1);
+var zInputOffset;
+var zOutputOffset;
+
+
 function zExpandOutput(expandWidth) {
   var n = zOutputOffset + expandWidth;
   var buffer;
@@ -20034,13 +20035,16 @@ function zInit(input) {
   FS.streams[1].error = false;
 }
 
-function zGetOutput() {
-  var buffer = new Uint8Array(zOutputOffset);
-  buffer.set(zOutput.subarray(0, zOutputOffset));
-  return buffer;
+function zGetOutput(copy) {
+  if (copy) {
+    var buffer = new Uint8Array(zOutputOffset);
+    buffer.set(zOutput.subarray(0, zOutputOffset));
+    return buffer;
+  }
+  return zOutput.subarray(0, zOutputOffset);
 }
 
-function zDeflate(input, level, zlibHeader) {
+function zDeflate(input, level, zlibHeader, copy) {
   zInit(input);
 
   level = typeof level === 'number' ? level : 6;
@@ -20048,14 +20052,14 @@ function zDeflate(input, level, zlibHeader) {
   zlibHeader = zlibHeader ? 1 : -1;
 
   zValidateOutput(_def_stdio(level, zlibHeader));
-  return zGetOutput();
+  return zGetOutput(copy);
 }
 
-function zInflate(input, zlibHeader) {
+function zInflate(input, zlibHeader, copy) {
   zInit(input);
   zlibHeader = zlibHeader ? 1 : -1;
   zValidateOutput(_inf_stdio(zlibHeader));
-  return zGetOutput();
+  return zGetOutput(copy);
 }
 
 function zValidateInput(input) {
@@ -20105,25 +20109,29 @@ function zValidateOutput(ret) {
 function zGC() {
   zInput = new Uint8Array(1);
 }
-
-
 // export
 
+function exportFunction (s, func) {
+  var paths = s.split('.');
+  var funcName = paths.pop();
+  var object = exports;
+  paths.forEach(function(path) {
+    object[path] = object[path] || {};
+    object = object[path];
+  });
+  object[funcName] = func;
+}
+
 if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
-  (function() {
-    this['zpipe'] = this['zpipe'] || {};
-    this['zpipe']['deflate'] = zDeflate;
-    this['zpipe']['inflate'] = zInflate;
-    this['zpipe']['gc'] = zGC;
-  }).call(exports);
+  exportFunction('zpipe.deflate', zDeflate);
+  exportFunction('zpipe.inflate', zInflate);
+  exportFunction('zpipe.gc', zGC);
 }
 
 if (ENVIRONMENT_IS_NODE) {
-  module['exports'] = {
-    'deflate': zDeflate,
-    'inflate': zInflate,
-    'gc': zGC
-  };
+  exportFunction('deflate', zDeflate);
+  exportFunction('inflate', zInflate);
+  exportFunction('gc', zGC);
 }
 
 }).call({}, typeof exports !== 'undefined' ? exports : this);

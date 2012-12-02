@@ -11,11 +11,9 @@ var JS_FILES = ['src/header.js', 'dist/zpipe.raw.js', 'src/footer.js'];
 
 module.exports = function(grunt) {
   grunt.initConfig({
-    meta: {},
-
     concat: {
       dist: {
-        src: JS_FILES,
+        src: ['src/header.js', 'dist/zpipe.raw.js', 'src/zpipe.funcs.js', 'src/footer.js'],
         dest: 'dist/zpipe.js'
       }
     },
@@ -36,26 +34,48 @@ module.exports = function(grunt) {
         stdout: true
       },
 
+      '_minify': {
+        command: 'java -jar ' + CLOSURE + ' --compilation_level ADVANCED_OPTIMIZATIONS --js dist/zpipe.uglify.js --js_output_file dist/zpipe.min.js --output_wrapper ";(function(){%output%}).call(this);"'
+      },
+
       'minify': {
-        command: 'java -jar ' + CLOSURE + ' --compilation_level ADVANCED_OPTIMIZATIONS --js dist/zpipe.js --js_output_file dist/zpipe.min.js',
-        stdout: true
+        command: 'grunt exec:_minify --force'
+      },
+
+      'rm': {
+        command: 'rm dist/zpipe.uglify.js'
       }
     },
     
-    // PhantomJS does not support Float64Array. See in the browser.
-    qunit: {
-      all: ['test/*.html']
+    nodeunit: {
+      all: ['test/test.js']
     },
 
     watch: {
       js: {
-        files: JS_FILES,
-        tasks: ['concat']
+        files: '<config:concat.dist.src>',
+        tasks: ['concat', 'test']
+      },
+
+      c: {
+        files: ['src/zpipe.c'],
+        tasks: ['compile', 'concat', 'test']
+      }
+    },
+
+    min: {
+      dist: {
+        src: ['dist/zpipe.js'],
+        dest: 'dist/zpipe.uglify.js'
       }
     }
   });
 
   grunt.loadNpmTasks('grunt-exec');
+  grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
-  grunt.registerTask('default', 'exec:compile concat exec:minify');
+  grunt.registerTask('test', 'nodeunit');
+  grunt.registerTask('compile', 'exec:compile');
+  grunt.registerTask('minify', 'min exec:minify exec:rm');
+  grunt.registerTask('default', 'compile concat test minify');
 };
