@@ -20035,6 +20035,10 @@ function zInit(input) {
   FS.streams[1].error = false;
 }
 
+function zExit() {
+  zInput = null;
+}
+
 function zGetOutput(copy) {
   if (copy) {
     var buffer = new Uint8Array(zOutputOffset);
@@ -20052,6 +20056,7 @@ function zDeflate(input, level, zlibHeader, copy) {
   zlibHeader = zlibHeader ? 1 : -1;
 
   zValidateOutput(_def_stdio(level, zlibHeader));
+  zExit();
   return zGetOutput(copy);
 }
 
@@ -20059,6 +20064,7 @@ function zInflate(input, zlibHeader, copy) {
   zInit(input);
   zlibHeader = zlibHeader ? 1 : -1;
   zValidateOutput(_inf_stdio(zlibHeader));
+  zExit();
   return zGetOutput(copy);
 }
 
