@@ -1,19 +1,9 @@
-# Z'PIPE!
+# Another ZPIPE
 
-zpipe is **not** a pipe.
+forked frome [richardassar/zpipe](https://github.com/richardassar/zpipe)
 
-!["Ceci n'est pas une pipe"](http://upload.wikimedia.org/wikipedia/en/thumb/b/b9/MagrittePipe.jpg/300px-MagrittePipe.jpg "Ceci n'est pas une pipe")
-
->The famous pipe. How people reproached me for it! And yet, could you stuff my pipe? No, it's just a representation, is it not? So if I had written on my picture "This is a pipe," I'd have been lying!
-
-## About
-
-zpipe exposes an interface to the [DEFLATE](http://www.ietf.org/rfc/rfc1951.txt) algorithm of the [ZLib](http://zlib.net/) compression library, it has been cross-compiled to JavaScript with [Emscripten](https://github.com/kripken/emscripten).
-
-## Motivation
-
-* Currently no compression API exposed in browsers
-* Help users suffering from poor upload bandwidth
+* Use TypedArray
+* Optimize IO (patch _read, _write functions)
 
 ## Usage
 
@@ -23,9 +13,16 @@ Regular `<script>` include ...
 <script type="text/javascript" src="zpipe.min.js"></script>
 
 <script>
-	var deflated = zpipe.deflate(byteArray, level, zlibHeader, copy);
+  // add zlib header
+	var deflated = zpipe.deflate(byteArray, level, copy);
+	var inflated = zpipe.inflate(deflated, copy);
 
-	var inflated = zpipe.inflate(deflated, zlibHeader, copy);
+  // compress only
+  var rawDeflated = zpipe.rawDeflate(byteArray, level, copy);
+  var rawInflated = zpipe.rawInflate(rawDeflated, copy);
+
+  // gc
+  zpipe.gc();
 </script>
 ```
 
@@ -39,11 +36,17 @@ zpipe is supported in the following browsers:
 * Opera
 * Safari
 
-## Build
+## Ready to Build
+
+Clone this repository
+
+```
+git clone git://github.com/ukyo/zpipe.git
+```
 
 Install [emscripten](https://github.com/kripken/emscripten) and set the path to config.js.
 
-Example([config.js.sample](https://github.com/ukyo/zpipe/config.js.sample)):
+Example:
 
 ```
 module.exports = {
@@ -55,6 +58,20 @@ Install grunt.
 
 ```
 npm install -g grunt
+```
+
+Install npm packages.
+
+```
+npm install
+```
+
+## How to Build
+
+Full build
+
+```
+grunt
 ```
 
 Initialize zlib (already inialized).
@@ -81,12 +98,6 @@ Minify concated file with UglifyJS and Closure Compiler.
 grunt minify
 ```
 
-Full build
-
-```
-grunt
-```
-
 ## Develop
 
 Test
@@ -95,7 +106,7 @@ Test
 grunt test
 ```
 
-Watch update files (zpipe.c, header.js, zpipe.funcs.js, footer.js).
+Watch to update files (zpipe.c, header.js, zpipe.funcs.js, footer.js).
 
 ```
 grunt watch

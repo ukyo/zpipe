@@ -23,6 +23,8 @@ function areAllElementsSame(a, b) {
 exports.testExported = function(test) {
   test.ok(zpipe.deflate, 'zpipe.deflate should be exported');
   test.ok(zpipe.inflate, 'zpipe.inflate should be exported');
+  test.ok(zpipe.rawDeflate, 'zpipe.rawDeflate should be exported');
+  test.ok(zpipe.rawInflate, 'zpipe.rawInflate should be exported');
   test.ok(zpipe.gc, 'zpipe.gc should be exported');
   test.done();
 }
@@ -37,7 +39,7 @@ exports.testInflate = function(test) {
 exports.testDeflate = function(test) {
   var bytes, n = 9;
   for (var level = 0; level <= 9; ++level) {
-    bytes = zpipe.inflate(zpipe.deflate(original, level, true, true), true);
+    bytes = zpipe.inflate(zpipe.deflate(original, level, true));
     test.equal(bytes.length, original.length, 'lengths of both should be same (compression level is ' + level + ')');
     test.ok(areAllElementsSame(bytes, original), 'all elements of both and the original should be same (compression level is ' + level + ')');
   }
