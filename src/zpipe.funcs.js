@@ -142,9 +142,6 @@ function zValidateInput(input) {
 
   switch (input.constructor) {
     case Uint8Array: break;
-    case Uint8ClampedArray:
-      input = new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
-      break;
     default:
       throw new Error('zpipe: input is not a byte array.');
   }
