@@ -57,7 +57,7 @@ module.exports = {
 Install grunt.
 
 ```
-npm install -g grunt
+npm install -g grunt-cli
 ```
 
 Install npm packages.
