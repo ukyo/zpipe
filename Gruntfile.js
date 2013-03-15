@@ -30,7 +30,7 @@ module.exports = function(grunt) {
       },
 
       'compile': {
-        command: EMSCRIPTEN + 'emcc -O2 src/zpipe.c zlib/libz.a -o dist/zpipe.raw.js --closure 0',
+        command: EMSCRIPTEN + 'emcc -O2 src/zpipe.c zlib/libz.a -o dist/zpipe.raw.js --closure 0 -s EXPORTED_FUNCTIONS="[\'_def_stdio\', \'_inf_stdio\']"',
         stdout: true
       },
 
@@ -53,7 +53,7 @@ module.exports = function(grunt) {
 
     watch: {
       js: {
-        files: '<config:concat.dist.src>',
+        files: ['<%= concat.dist.src %>'],
         tasks: ['concat', 'test']
       },
 
@@ -63,9 +63,9 @@ module.exports = function(grunt) {
       }
     },
 
-    min: {
-      dist: {
-        src: ['dist/zpipe.js'],
+    uglify: {
+      compress: {
+        src: 'dist/zpipe.js',
         dest: 'dist/zpipe.uglify.js'
       }
     }
@@ -73,9 +73,12 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-exec');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
-  grunt.registerTask('test', 'nodeunit');
-  grunt.registerTask('compile', 'exec:compile');
-  grunt.registerTask('minify', 'min exec:minify exec:rm');
-  grunt.registerTask('default', 'compile concat test minify');
+  grunt.registerTask('test', ['nodeunit']);
+  grunt.registerTask('compile', ['exec:compile']);
+  grunt.registerTask('minify', ['uglify', 'exec:minify', 'exec:rm']);
+  grunt.registerTask('default', ['compile' ,'concat' ,'test' ,'minify']);
 };
